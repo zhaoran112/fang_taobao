@@ -16,7 +16,11 @@
         <span class="text">领券</span>
       </div>
     </div>
-    <van-checkbox-group icon-size="0.2rem" v-model="checkedList" ref="checkboxGroup">
+    <van-checkbox-group
+      icon-size="0.2rem"
+      v-model="checkedList"
+      ref="checkboxGroup"
+    >
       <div
         v-for="(item, index) in dataJson.list"
         :key="index"
@@ -46,14 +50,10 @@
 </template>
 
 <script>
+import { reactive, ref, watch, onMounted } from "vue";
+
 export default {
   props: {
-    checkedAll: {
-      type: Boolean,
-      default() {
-        return false;
-      },
-    },
     itemChecked: {
       type: Boolean,
       default() {
@@ -67,38 +67,30 @@ export default {
       },
     },
   },
-  data() {
+  setup(props, { emit }) {
+    const checkboxGroup = ref(null);
+    let allChecked = ref(false);
+    const checkedList = ref([]);
+    watch(allChecked, (flag) => {
+      checkboxGroup.value.toggleAll(flag);
+    });
+    watch(checkedList, (arr) => {
+      emit("update:itemChecked", false);
+      if (props.dataJson.list.length == arr.length) {
+        allChecked.value = true;
+        emit("update:itemChecked", true);
+      }
+      if (arr.length == 0) {
+        allChecked.value = false;
+      }
+      emit("getChecked");
+    });
     return {
-      checkedList: [],
-      allChecked: false,
+      checkedList,
+      allChecked,
+      checkboxGroup,
     };
   },
-  watch: {
-    // checkedAll: {
-    //   handler(flag) {
-    //     this.allChecked = flag;
-    //   },
-    // },
-    allChecked: {
-      handler(flag) {
-        this.$refs.checkboxGroup.toggleAll(flag);
-      },
-    },
-    checkedList: {
-      handler(arr) {
-        this.$emit("update:itemChecked", false);
-        if (this.dataJson.list.length == arr.length) {
-          this.allChecked = true;
-          this.$emit("update:itemChecked", true);
-        }
-        if (arr.length == 0) {
-          this.allChecked = false;
-        }
-        this.$emit("getChecked");
-      },
-    },
-  },
-  methods: {},
 };
 </script>
 

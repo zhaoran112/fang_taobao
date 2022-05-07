@@ -19,18 +19,21 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
   props: {
     swipeList: {
       type: Array,
     },
   },
-  methods: {
-    handelClick(n) {
-      if (n == 9) {
-        this.$router.push(`/classify/${1}`);
-      }
-    },
+  setup(props) {
+    const router = useRouter()
+    const handelClick = (n) => {
+      router.push(`/classify/${1}`)
+    };
+    return {
+      handelClick,
+    };
   },
 };
 </script>

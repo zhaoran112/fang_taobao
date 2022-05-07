@@ -29,67 +29,65 @@
 <script>
 import cartComponent from "./components/cartComponent.vue";
 import tabbar from "../components/tabbar.vue";
+import { reactive, ref, watch, onMounted } from "vue";
 
 export default {
   components: {
     cartComponent,
     tabbar,
   },
-  data() {
-    return {
-      checkedAll: false,
-      checkedNum: 0,
-      productList: [
-        {
-          name: "高等教育出版社",
-          checkedAll: false,
-          list: [
-            {
-              num: "2",
-              price: "2.00",
-              desc: "描述信息",
-              title: "商品标题",
-              thumb: "https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
-            },
-          ],
-        },
-        {
-          name: "出版社",
-          checkedAll: false,
-          list: [
-            {
-              num: "2",
-              price: "2.00",
-              desc: "描述信息",
-              title: "商品标题",
-              thumb: "https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
-            },
-            {
-              num: "2",
-              price: "222.00",
-              desc: "描述信息",
-              title: "商品标题",
-              thumb: "https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
-            },
-          ],
-        },
-      ],
-    };
-  },
-  methods: {
-    handelClick(flag) {
-      this.$refs.cart.forEach((el, index) => {
-        this.$refs.cart[index].$refs.checkboxGroup.toggleAll(flag);
+  setup(props) {
+    const cart = ref(null);
+    let checkedAll = ref(false);
+    const productList = reactive([
+      {
+        name: "高等教育出版社",
+        checkedAll: false,
+        list: [
+          {
+            num: "2",
+            price: "2.00",
+            desc: "描述信息",
+            title: "商品标题",
+            thumb: "https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
+          },
+        ],
+      },
+      {
+        name: "出版社",
+        checkedAll: false,
+        list: [
+          {
+            num: "2",
+            price: "2.00",
+            desc: "描述信息",
+            title: "商品标题",
+            thumb: "https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
+          },
+          {
+            num: "2",
+            price: "222.00",
+            desc: "描述信息",
+            title: "商品标题",
+            thumb: "https://cdn.jsdelivr.net/npm/@vant/assets/ipad.jpeg",
+          },
+        ],
+      },
+    ]);
+    const handelClick = (flag) => {
+      cart.value.forEach((el) => {
+        el.checkboxGroup.toggleAll(flag);
       });
-    },
-    getChecked() {
-      const flag = this.productList.every((item) => item.checkedAll);
+    };
+    const getChecked = () => {
+      const flag = productList.every((item) => item.checkedAll);
       if (flag) {
-        this.checkedAll = true;
+        checkedAll.value = true;
       } else {
-        this.checkedAll = false;
+        checkedAll.value = false;
       }
-    },
+    };
+    return { checkedAll, productList, cart, handelClick, getChecked };
   },
 };
 </script>
