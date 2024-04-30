@@ -1,4 +1,4 @@
-# taobao
+# vue+vant；仿淘宝移动端页面
 
 ## Project setup
 ```
